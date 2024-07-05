@@ -2,7 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import csv from 'csv-parser';
 import zlib from 'zlib';
+import NodeCache from 'node-cache';
 import type { Order, Store } from '../models';
+
+const cache = new NodeCache();
+const STORE_DATA_KEY = 'storesData';
+const TTL_IN_SECONDS = 3600;
 
 type OrderType = 'asc' | 'desc';
 
@@ -27,12 +32,20 @@ const readGzippedCSV = (filePath: string): Promise<Order[]> =>
 
 const readCSV = (filePath: string): Promise<Store[]> =>
   new Promise((resolve, reject) => {
-    const data: any[] = [];
-    fs.createReadStream(filePath)
-      .pipe(csv())
-      .on('data', (row) => data.push(row))
-      .on('end', () => resolve(data))
-      .on('error', (error) => reject(error));
+    const cachedData = cache.get<Store[]>(STORE_DATA_KEY);
+    if (cachedData) {
+      resolve(cachedData);
+    } else {
+      const data: Store[] = [];
+      fs.createReadStream(filePath)
+        .pipe(csv())
+        .on('data', (row) => data.push(row))
+        .on('end', () => {
+          cache.set(STORE_DATA_KEY, data, TTL_IN_SECONDS);
+          resolve(data);
+        })
+        .on('error', (error) => reject(error));
+    }
   });
 
 const getSortedOverdueOrders = async ({ order, pageSize, skip }: getSortedOverdueOrderDto) => {
