@@ -11,7 +11,7 @@ const TTL_IN_SECONDS = 3600;
 
 type OrderType = 'asc' | 'desc';
 
-interface combinedOrder {
+interface CombinedOrder {
   orderId: string;
   orderValue: string;
   items: string;
@@ -71,25 +71,23 @@ const readCSV = (filePath: string): Promise<Store[]> =>
     }
   });
 
-const getSortedOverdueOrders = async (order: OrderType, pageSize: number, skip: number) => {
-  const orders = await readGzippedCSV(path.join(dataDir, 'orders.csv.gz'), pageSize, skip, order);
-  const stores = await readCSV(path.join(dataDir, 'stores.csv'));
-  const combinedOrders: combinedOrder[] = [];
+const combineOrdersAndStores = (orders: Order[], stores: Store[]): CombinedOrder[] => {
+  const combinedOrders: CombinedOrder[] = [];
 
-  orders.forEach((item) => {
-    const store = stores.find((s) => s.storeId === item.storeId);
+  orders.forEach((order) => {
+    const store = stores.find((s) => s.storeId === order.storeId);
 
     if (store) {
-      const [day, month, year] = item.latest_ship_date.split('/');
+      const [day, month, year] = order.latest_ship_date.split('/');
       const latestShipDate = new Date(`${year}-${month}-${day}`);
       const currentDate = new Date();
       const daysOverdue = Math.floor((currentDate.getTime() - latestShipDate.getTime()) / (1000 * 60 * 60 * 24));
 
       combinedOrders.push({
-        orderId: item.orderId,
-        orderValue: item.orderValue,
-        items: item.items,
-        destination: item.destination,
+        orderId: order.orderId,
+        orderValue: order.orderValue,
+        items: order.items,
+        destination: order.destination,
         daysOverdue,
         storeCountry: store.country,
         storeMarketplace: store.marketplace,
@@ -97,6 +95,14 @@ const getSortedOverdueOrders = async (order: OrderType, pageSize: number, skip: 
       });
     }
   });
+
+  return combinedOrders;
+};
+
+const getSortedOverdueOrders = async (order: OrderType, pageSize: number, skip: number) => {
+  const orders = await readGzippedCSV(path.join(dataDir, 'orders.csv.gz'), pageSize, skip, order);
+  const stores = await readCSV(path.join(dataDir, 'stores.csv'));
+  const combinedOrders = combineOrdersAndStores(orders, stores);
 
   return combinedOrders;
 };
