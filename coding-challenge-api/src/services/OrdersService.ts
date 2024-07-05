@@ -11,6 +11,17 @@ const TTL_IN_SECONDS = 3600;
 
 type OrderType = 'asc' | 'desc';
 
+interface combinedOrder {
+  orderId: string;
+  orderValue: string;
+  items: string;
+  destination: string;
+  daysOverdue: number;
+  storeCountry: string;
+  storeMarketplace: string;
+  storeShopName: string;
+}
+
 const dataDir = path.resolve(__dirname, '../../data');
 
 const readGzippedCSV = (filePath: string, pageSize: number, skip: number, order: 'asc' | 'desc'): Promise<Order[]> =>
@@ -63,9 +74,31 @@ const readCSV = (filePath: string): Promise<Store[]> =>
 const getSortedOverdueOrders = async (order: OrderType, pageSize: number, skip: number) => {
   const orders = await readGzippedCSV(path.join(dataDir, 'orders.csv.gz'), pageSize, skip, order);
   const stores = await readCSV(path.join(dataDir, 'stores.csv'));
-  console.log(stores[0]);
-  console.log(orders);
-  return orders;
+  const combinedOrders: combinedOrder[] = [];
+
+  orders.forEach((item) => {
+    const store = stores.find((s) => s.storeId === item.storeId);
+
+    if (store) {
+      const [day, month, year] = item.latest_ship_date.split('/');
+      const latestShipDate = new Date(`${year}-${month}-${day}`);
+      const currentDate = new Date();
+      const daysOverdue = Math.floor((currentDate.getTime() - latestShipDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      combinedOrders.push({
+        orderId: item.orderId,
+        orderValue: item.orderValue,
+        items: item.items,
+        destination: item.destination,
+        daysOverdue,
+        storeCountry: store.country,
+        storeMarketplace: store.marketplace,
+        storeShopName: store.shopName,
+      });
+    }
+  });
+
+  return combinedOrders;
 };
 
 export default getSortedOverdueOrders;
