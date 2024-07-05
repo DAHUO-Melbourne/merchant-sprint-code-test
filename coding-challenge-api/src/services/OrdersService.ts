@@ -11,15 +11,9 @@ const TTL_IN_SECONDS = 3600;
 
 type OrderType = 'asc' | 'desc';
 
-interface getSortedOverdueOrderDto {
-  order: OrderType;
-  pageSize: number;
-  skip: number;
-}
-
 const dataDir = path.resolve(__dirname, '../../data');
 
-const readGzippedCSV = (filePath: string): Promise<Order[]> =>
+const readGzippedCSV = (filePath: string, pageSize: number, skip: number, order: 'asc' | 'desc'): Promise<Order[]> =>
   new Promise((resolve, reject) => {
     const orders: Order[] = [];
     fs.createReadStream(filePath)
@@ -33,7 +27,18 @@ const readGzippedCSV = (filePath: string): Promise<Order[]> =>
           orders.push(data);
         }
       })
-      .on('end', () => resolve(orders))
+      .on('end', () => {
+        orders.sort((a, b) => {
+          const dateA = new Date(`${a.latest_ship_date.split('/').reverse().join('-')}`);
+          const dateB = new Date(`${b.latest_ship_date.split('/').reverse().join('-')}`);
+          if (order === 'asc') {
+            return dateA.getTime() - dateB.getTime();
+          }
+          return dateB.getTime() - dateA.getTime();
+        });
+
+        resolve(orders.slice(skip * pageSize, (skip + 1) * pageSize));
+      })
       .on('error', (error) => reject(error));
   });
 
@@ -55,11 +60,12 @@ const readCSV = (filePath: string): Promise<Store[]> =>
     }
   });
 
-const getSortedOverdueOrders = async ({ order, pageSize, skip }: getSortedOverdueOrderDto) => {
-  const orders = await readGzippedCSV(path.join(dataDir, 'orders.csv.gz'));
+const getSortedOverdueOrders = async (order: OrderType, pageSize: number, skip: number) => {
+  const orders = await readGzippedCSV(path.join(dataDir, 'orders.csv.gz'), pageSize, skip, order);
   const stores = await readCSV(path.join(dataDir, 'stores.csv'));
   console.log(stores[0]);
-  console.log(orders.length);
+  console.log(orders);
+  return orders;
 };
 
 export default getSortedOverdueOrders;
