@@ -1,18 +1,38 @@
-import express, { Request, Response } from 'express';
+import app from './app';
 
-import cors from 'cors';
-import { getUser } from './user';
+const http = require('http');
 
-const app = express();
 const port = 8080;
+const httpServer = http.createServer(app);
 
-app.use(cors());
-app.get('/user', getUser);
+function onError(error: { syscall: string; code: string }) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
 
-app.get('/sales', (req, res) => {
-  /** Write an api for the widget */
-});
+  const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
 
-app.listen(port, () => {
-  console.log(`server started at http://localhost:${port}`);
-});
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(`${bind} requires elevated privileges`);
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(`${bind} is already in use`);
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+function onListening(server: { address: () => { address: string; family: string; port: number } }, protocol: string) {
+  const addr = server.address();
+  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
+  console.log(`${protocol} server listening on ${bind}`);
+}
+
+httpServer.listen(port);
+httpServer.on('http error', onError);
+httpServer.on('listening', () => onListening(httpServer, 'HTTP'));
