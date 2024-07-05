@@ -25,7 +25,14 @@ const readGzippedCSV = (filePath: string): Promise<Order[]> =>
     fs.createReadStream(filePath)
       .pipe(zlib.createGunzip())
       .pipe(csv())
-      .on('data', (data) => orders.push(data))
+      .on('data', (data) => {
+        const [day, month, year] = data.latest_ship_date.split('/');
+        const date = new Date(`${year}-${month}-${day}`);
+        const currentDate = new Date();
+        if (data.shipment_status === 'Pending' && date < currentDate) {
+          orders.push(data);
+        }
+      })
       .on('end', () => resolve(orders))
       .on('error', (error) => reject(error));
   });
@@ -52,7 +59,7 @@ const getSortedOverdueOrders = async ({ order, pageSize, skip }: getSortedOverdu
   const orders = await readGzippedCSV(path.join(dataDir, 'orders.csv.gz'));
   const stores = await readCSV(path.join(dataDir, 'stores.csv'));
   console.log(stores[0]);
-  console.log(orders[0]);
+  console.log(orders.length);
 };
 
 export default getSortedOverdueOrders;
