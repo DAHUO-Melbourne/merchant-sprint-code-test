@@ -1,11 +1,11 @@
-import express, { Request, Response } from 'express';
-
+import express from 'express';
 import cors from 'cors';
-import { getUser } from './user';
+import OrderController from './controllers/ordersController';
 
 const app = express();
 
 app.use(cors());
-app.get('/user', getUser);
+app.use(express.json());
+app.use('/orders', OrderController);
 
 export default app;
