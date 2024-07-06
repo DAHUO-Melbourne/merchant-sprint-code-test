@@ -16,34 +16,33 @@ const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({ orders }) => {
           {
             title: 'MARKETPLACE',
             field: 'storeMarketplace',
+            sorting: false,
           },
           {
             title: 'STORE',
             field: 'storeShopName',
+            sorting: false,
           },
           {
             title: 'ORDER ID',
             field: 'orderId',
+            sorting: false,
           },
           {
             title: 'ORDER VALUE',
             field: 'orderValue',
+            sorting: false,
           },
           {
             title: 'ITEMS',
             field: 'items',
             type: 'numeric',
+            sorting: false,
           },
           {
             title: 'DESTINATION',
             field: 'destination',
-            headerStyle: {
-              fontSize: 14,
-              fontWeight: 600,
-            },
-            cellStyle: {
-              fontSize: 12,
-            },
+            sorting: false,
           },
           {
             title: 'DAYS OVERDUE',
