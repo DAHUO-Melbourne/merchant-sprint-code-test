@@ -1,0 +1,12 @@
+.table-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  max-height: 100vh;
+}
+
+.MuiPaper-root {
+  width: 100%;
+  max-width: 1000px;
+}
