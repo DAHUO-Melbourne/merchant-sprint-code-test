@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import Dashboard from './page/Dashboard';
 import styled from 'styled-components';
 
 const AppWrapper = styled.div`
@@ -48,7 +48,7 @@ const App = () => {
         <HeaderText>Analytics Dashboard</HeaderText>
         <Username>Welcome, {user ? user.firstName : 'Guest'}!</Username>
       </AppHeader>
-      {/** Dashboard - new widgets go here */}
+      <Dashboard />
     </AppWrapper>
   );
 };
