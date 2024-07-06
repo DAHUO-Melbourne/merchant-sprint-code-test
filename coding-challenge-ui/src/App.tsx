@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Dashboard from './page/Dashboard';
 import styled from 'styled-components';
-import { ThemeProvider, createTheme } from '@mui/material';
 
 const AppWrapper = styled.div`
   height: 100vh;
@@ -33,7 +32,6 @@ interface User {
 }
 
 const App = () => {
-  const defaultMaterialTheme = createTheme();
   const [user, setUser] = useState<User | null>(null);
 
   React.useEffect(() => {
@@ -45,15 +43,13 @@ const App = () => {
   }, []);
 
   return (
-    <ThemeProvider theme={defaultMaterialTheme}>
-      <AppWrapper>
-        <AppHeader>
-          <HeaderText>Analytics Dashboard</HeaderText>
-          <Username>Welcome, {user ? user.firstName : 'Guest'}!</Username>
-        </AppHeader>
-        <Dashboard />
-      </AppWrapper>
-    </ThemeProvider>
+    <AppWrapper>
+      <AppHeader>
+        <HeaderText>Analytics Dashboard</HeaderText>
+        <Username>Welcome, {user ? user.firstName : 'Guest'}!</Username>
+      </AppHeader>
+      <Dashboard />
+    </AppWrapper>
   );
 };
 
