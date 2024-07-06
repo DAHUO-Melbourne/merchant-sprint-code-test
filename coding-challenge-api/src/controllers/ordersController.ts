@@ -21,6 +21,15 @@ router.get('/overdueOrders', async (req: Request, res: Response) => {
     return res.send(orders);
   } catch (err) {
     const error = err as Error;
+
+    if (error.message.includes('Unauthorized')) {
+      return res.status(401).send('Unauthorized access');
+    }
+
+    if (error.message.includes('Forbidden')) {
+      return res.status(403).send('Forbidden access');
+    }
+
     return res.status(500).send(error.message);
   }
 });
