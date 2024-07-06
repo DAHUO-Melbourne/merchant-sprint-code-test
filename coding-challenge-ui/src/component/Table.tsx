@@ -1,28 +1,25 @@
 import React, { useState } from 'react';
 import { Table, Pagination, FormControl } from 'react-bootstrap';
 import { Order } from '../page/Dashboard';
+import getOverdueOrders from '../apis/getOverdueOrders';
 
 interface OverdueOrdersTableProps {
   orders: Order[];
+  setOrders: (p: Order[]) => void;
 }
 
-const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({ orders }) => {
+const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({
+  orders,
+  setOrders,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const totalPages = Math.ceil(orders.length / itemsPerPage);
 
-  const handlePageChange = (pageNumber: number) => {
+  const handlePageChange = async (pageNumber: number) => {
     setCurrentPage(pageNumber);
-  };
-
-  const paginateOrders = (
-    orders: Order[],
-    pageNumber: number,
-    itemsPerPage: number,
-  ) => {
-    const startIndex = (pageNumber - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return orders.slice(startIndex, endIndex);
+    const orderData = await getOverdueOrders('desc', 5, pageNumber);
+    setOrders(orderData);
   };
 
   return (
@@ -73,7 +70,7 @@ const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({ orders }) => {
           </tr>
         </thead>
         <tbody>
-          {paginateOrders(orders, currentPage, itemsPerPage).map((order) => (
+          {orders.map((order) => (
             <tr key={order.orderId}>
               <td style={{ textAlign: 'left' }}>{order.storeMarketplace}</td>
               <td style={{ textAlign: 'left' }}>{order.storeShopName}</td>
@@ -120,7 +117,9 @@ const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({ orders }) => {
           <FormControl
             type="number"
             value={currentPage}
-            onChange={() => {}}
+            onChange={(e) => {
+              handlePageChange(parseInt(e.target.value));
+            }}
             style={{ width: '50px', display: 'inline-block' }}
           />{' '}
           of {totalPages}

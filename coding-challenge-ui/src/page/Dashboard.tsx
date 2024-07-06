@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Table from '../component/Table';
+import getOverdueOrders from '../apis/getOverdueOrders';
 
 export interface Order {
   orderId: string;
@@ -15,15 +16,13 @@ export interface Order {
 const Dashboard = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   useEffect(() => {
-    fetch(
-      'http://localhost:8080/orders/overdueOrders?order=desc&pageSize=5&skip=0',
-    )
-      .then((results) => results.json())
-      .then((data) => {
-        setOrders(data);
-      });
+    const getOrders = async () => {
+      const data = await getOverdueOrders('desc', 5, 0);
+      setOrders(data);
+    };
+    getOrders();
   }, []);
-  return <Table orders={orders} />;
+  return <Table orders={orders} setOrders={setOrders} />;
 };
 
 export default Dashboard;
