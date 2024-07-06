@@ -13,12 +13,26 @@ const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({
   setOrders,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [order, setOrder] = useState('desc');
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(orders.length / itemsPerPage);
+  const totalPages = Math.ceil(orders?.length / itemsPerPage);
 
   const handlePageChange = async (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    const orderData = await getOverdueOrders('desc', 5, pageNumber);
+    const orderData = await getOverdueOrders(order, 5, pageNumber - 1);
+    setOrders(orderData);
+  };
+
+  const handlePageSort = async () => {
+    setCurrentPage(1);
+    let orderData;
+    if (order === 'desc') {
+      setOrder('asc');
+      orderData = await getOverdueOrders('asc', 5, 0);
+    } else {
+      setOrder('desc');
+      orderData = await getOverdueOrders('desc', 5, 0);
+    }
     setOrders(orderData);
   };
 
@@ -66,11 +80,17 @@ const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({
             <th style={{ textAlign: 'left', width: '15%' }}>ORDER VALUE</th>
             <th style={{ textAlign: 'left', width: '10%' }}>ITEMS</th>
             <th style={{ textAlign: 'left', width: '20%' }}>DESTINATION</th>
-            <th style={{ textAlign: 'left', width: '10%' }}>DAYS OVERDUE</th>
+            <th
+              style={{ textAlign: 'left', width: '10%' }}
+              onClick={() => handlePageSort()}
+            >
+              <span className="material-symbols-outlined">swap_vert</span>DAYS
+              OVERDUE
+            </th>
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => (
+          {orders?.map((order) => (
             <tr key={order.orderId}>
               <td style={{ textAlign: 'left' }}>{order.storeMarketplace}</td>
               <td style={{ textAlign: 'left' }}>{order.storeShopName}</td>
