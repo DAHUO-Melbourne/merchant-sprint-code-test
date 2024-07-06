@@ -39,7 +39,6 @@ const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({
   return (
     <div
       style={{
-        padding: '20px',
         marginTop: '40px',
         display: 'flex',
         flexDirection: 'column',
@@ -67,12 +66,11 @@ const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({
       </div>
       <Table
         striped
-        bordered
         hover
         size="sm"
         style={{ width: '100%', margin: 'auto', backgroundColor: '#ffffff' }}
       >
-        <thead style={{ backgroundColor: '#ffffff' }}>
+        <thead style={{ backgroundColor: '#E5E7E9' }}>
           <tr>
             <th style={{ textAlign: 'left', width: '15%' }}>MARKETPLACE</th>
             <th style={{ textAlign: 'left', width: '15%' }}>STORE</th>
@@ -116,6 +114,7 @@ const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({
           justifyContent: 'center',
           marginTop: '20px',
           listStyle: 'none',
+          alignItems: 'center',
         }}
       >
         <Pagination.Item
