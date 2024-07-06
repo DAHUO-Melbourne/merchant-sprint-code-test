@@ -1,78 +1,145 @@
-import React from 'react';
-import MaterialTable from 'material-table';
+import React, { useState } from 'react';
+import { Table, Pagination, FormControl } from 'react-bootstrap';
 import { Order } from '../page/Dashboard';
-import './OverdueOrdersTable.css';
 
 interface OverdueOrdersTableProps {
   orders: Order[];
 }
 
 const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({ orders }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(orders.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const paginateOrders = (
+    orders: Order[],
+    pageNumber: number,
+    itemsPerPage: number,
+  ) => {
+    const startIndex = (pageNumber - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return orders.slice(startIndex, endIndex);
+  };
+
   return (
-    <div className="table-container">
-      <MaterialTable
-        title="Overdue Orders"
-        columns={[
-          {
-            title: 'MARKETPLACE',
-            field: 'storeMarketplace',
-            sorting: false,
-          },
-          {
-            title: 'STORE',
-            field: 'storeShopName',
-            sorting: false,
-          },
-          {
-            title: 'ORDER ID',
-            field: 'orderId',
-            sorting: false,
-          },
-          {
-            title: 'ORDER VALUE',
-            field: 'orderValue',
-            sorting: false,
-          },
-          {
-            title: 'ITEMS',
-            field: 'items',
-            type: 'numeric',
-            sorting: false,
-          },
-          {
-            title: 'DESTINATION',
-            field: 'destination',
-            sorting: false,
-          },
-          {
-            title: 'DAYS OVERDUE',
-            field: 'daysOverdue',
-            type: 'numeric',
-            render: (rowData) => (
-              <span
-                style={{ color: rowData.daysOverdue > 20 ? 'red' : 'black' }}
-              >
-                {rowData.daysOverdue}
-              </span>
-            ),
-          },
-        ]}
-        data={orders}
-        options={{
-          paging: true,
-          pageSize: 5,
-          search: false,
-          headerStyle: {
-            fontSize: 12,
-            color: '#ABB2B9',
-            fontWeight: 600,
-            backgroundColor: '#F2F3F4',
-          },
-          rowStyle: {
-            fontSize: 12,
-          },
+    <div
+      style={{
+        padding: '20px',
+        marginTop: '40px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#ffffff',
+        borderRadius: '10px',
+        width: '90%',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+        margin: '40px auto',
+      }}
+    >
+      <div
+        style={{
+          marginBottom: '10px',
+          fontWeight: 'bold',
+          width: '100%',
+          textAlign: 'left',
+          backgroundColor: '#ffffff',
+          padding: '10px',
+          borderRadius: '5px',
         }}
-      />
+      >
+        Overdue Orders
+      </div>
+      <Table
+        striped
+        bordered
+        hover
+        size="sm"
+        style={{ width: '100%', margin: 'auto', backgroundColor: '#ffffff' }}
+      >
+        <thead style={{ backgroundColor: '#ffffff' }}>
+          <tr>
+            <th style={{ textAlign: 'left', width: '15%' }}>MARKETPLACE</th>
+            <th style={{ textAlign: 'left', width: '15%' }}>STORE</th>
+            <th style={{ textAlign: 'left', width: '15%' }}>ORDER ID</th>
+            <th style={{ textAlign: 'left', width: '15%' }}>ORDER VALUE</th>
+            <th style={{ textAlign: 'left', width: '10%' }}>ITEMS</th>
+            <th style={{ textAlign: 'left', width: '20%' }}>DESTINATION</th>
+            <th style={{ textAlign: 'left', width: '10%' }}>DAYS OVERDUE</th>
+          </tr>
+        </thead>
+        <tbody>
+          {paginateOrders(orders, currentPage, itemsPerPage).map((order) => (
+            <tr key={order.orderId}>
+              <td style={{ textAlign: 'left' }}>{order.storeMarketplace}</td>
+              <td style={{ textAlign: 'left' }}>{order.storeShopName}</td>
+              <td style={{ textAlign: 'left' }}>{order.orderId}</td>
+              <td style={{ textAlign: 'left' }}>{order.orderValue}</td>
+              <td style={{ textAlign: 'left' }}>{order.items}</td>
+              <td style={{ textAlign: 'left' }}>{order.destination}</td>
+              <td
+                style={{
+                  textAlign: 'left',
+                  color: order.daysOverdue > 20 ? 'red' : 'black',
+                }}
+              >
+                {order.daysOverdue}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      <Pagination
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '20px',
+          listStyle: 'none',
+        }}
+      >
+        <Pagination.Item
+          onClick={() => handlePageChange(1)}
+          disabled={currentPage === 1}
+        >
+          <span className="material-symbols-outlined">
+            keyboard_double_arrow_left
+          </span>
+        </Pagination.Item>
+        <Pagination.Item
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          <span className="material-symbols-outlined">chevron_left</span>
+        </Pagination.Item>
+        <Pagination.Item disabled>
+          Page{' '}
+          <FormControl
+            type="number"
+            value={currentPage}
+            onChange={() => {}}
+            style={{ width: '50px', display: 'inline-block' }}
+          />{' '}
+          of {totalPages}
+        </Pagination.Item>
+        <Pagination.Item
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          <span className="material-symbols-outlined">chevron_right</span>
+        </Pagination.Item>
+        <Pagination.Item
+          onClick={() => handlePageChange(totalPages)}
+          disabled={currentPage === totalPages}
+        >
+          <span className="material-symbols-outlined">
+            keyboard_double_arrow_right
+          </span>
+        </Pagination.Item>
+      </Pagination>
     </div>
   );
 };
