@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Pagination, FormControl } from 'react-bootstrap';
-import { Order } from '../page/Dashboard';
 import getOverdueOrders from '../apis/getOverdueOrders';
+import { Order, OrderType } from '../apis/getOverdueOrders';
 
-interface OverdueOrdersTableProps {
-  orders: Order[];
-  setOrders: (p: Order[]) => void;
-}
-
-const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({
-  orders,
-  setOrders,
-}) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [order, setOrder] = useState('desc');
-  const itemsPerPage = 5;
-  const totalPages = Math.ceil(orders?.length / itemsPerPage);
+const OverdueOrdersTable: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [order, setOrder] = useState<OrderType>('desc');
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  useEffect(() => {
+    const getOrders = async () => {
+      const data = await getOverdueOrders('desc', 5, 0);
+      setOrders(data?.orders ?? []);
+      setTotalPages(data?.pagesTotalNum ?? 1);
+    };
+    getOrders();
+  }, []);
 
   const handlePageChange = async (pageNumber: number) => {
     setCurrentPage(pageNumber);
     const orderData = await getOverdueOrders(order, 5, pageNumber - 1);
-    setOrders(orderData);
+    setOrders(orderData?.orders ?? []);
   };
 
   const handlePageSort = async () => {
@@ -33,7 +33,7 @@ const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({
       setOrder('desc');
       orderData = await getOverdueOrders('desc', 5, 0);
     }
-    setOrders(orderData);
+    setOrders(orderData?.orders ?? []);
   };
 
   return (
@@ -79,7 +79,7 @@ const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({
             <th style={{ textAlign: 'left', width: '10%' }}>ITEMS</th>
             <th style={{ textAlign: 'left', width: '20%' }}>DESTINATION</th>
             <th
-              style={{ textAlign: 'left', width: '10%' }}
+              style={{ textAlign: 'left', width: '10%', cursor: 'pointer' }}
               onClick={() => handlePageSort()}
             >
               <span className="material-symbols-outlined">swap_vert</span>DAYS
@@ -131,7 +131,7 @@ const OverdueOrdersTable: React.FC<OverdueOrdersTableProps> = ({
         >
           <span className="material-symbols-outlined">chevron_left</span>
         </Pagination.Item>
-        <Pagination.Item disabled>
+        <Pagination.Item>
           Page{' '}
           <FormControl
             type="number"

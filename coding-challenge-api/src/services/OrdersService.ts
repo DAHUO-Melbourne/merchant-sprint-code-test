@@ -22,9 +22,19 @@ interface CombinedOrder {
   storeShopName: string;
 }
 
+interface CSVOrderInfo {
+  ordersTotalNum: number;
+  orders: Order[];
+}
+
 const dataDir = path.resolve(__dirname, '../../data');
 
-const readGzippedCSV = (filePath: string, pageSize: number, skip: number, order: 'asc' | 'desc'): Promise<Order[]> =>
+const readGzippedCSV = (
+  filePath: string,
+  pageSize: number,
+  skip: number,
+  order: 'asc' | 'desc',
+): Promise<CSVOrderInfo> =>
   new Promise((resolve, reject) => {
     const orders: Order[] = [];
     fs.createReadStream(filePath)
@@ -48,7 +58,7 @@ const readGzippedCSV = (filePath: string, pageSize: number, skip: number, order:
           return dateB.getTime() - dateA.getTime();
         });
 
-        resolve(orders.slice(skip * pageSize, (skip + 1) * pageSize));
+        resolve({ ordersTotalNum: orders.length, orders: orders.slice(skip * pageSize, (skip + 1) * pageSize) });
       })
       .on('error', (error) => reject(error));
   });
@@ -100,11 +110,15 @@ const combineOrdersAndStores = (orders: Order[], stores: Store[]): CombinedOrder
 };
 
 const getSortedOverdueOrders = async (order: OrderType, pageSize: number, skip: number) => {
-  const orders = await readGzippedCSV(path.join(dataDir, 'orders.csv.gz'), pageSize, skip, order);
+  const { ordersTotalNum, orders } = await readGzippedCSV(path.join(dataDir, 'orders.csv.gz'), pageSize, skip, order);
   const stores = await readCSV(path.join(dataDir, 'stores.csv'));
   const combinedOrders = combineOrdersAndStores(orders, stores);
+  const pagesTotalNum = Math.ceil(ordersTotalNum / pageSize);
 
-  return combinedOrders;
+  return {
+    pagesTotalNum,
+    orders: combinedOrders,
+  };
 };
 
 export default getSortedOverdueOrders;
