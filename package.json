@@ -5,7 +5,9 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "back:test": "cd packages/coding-challenge-api && npm run test",
+    "front:test": "cd packages/coding-challenge-ui && npm run test",
+    "test": "npm-run-all --parallel back:test front:test",
     "back:dev": "cd packages/coding-challenge-api && npm run dev",
     "front:dev": "cd packages/coding-challenge-ui && npm run dev",
     "dev": "npm-run-all --parallel back:dev front:dev"
