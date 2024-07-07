@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import getOverdueOrders from '../apis/getOverdueOrders';
 import { Order, OrderType } from '../apis/getOverdueOrders';
 import ReactCountryFlag from 'react-country-flag';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { TableLoading } from 'react-bootstrap-table-loading';
-import debounce from 'lodash/debounce';
+import useDebounce from '../hooks/useDebounce';
 
 const OverdueOrdersTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -13,12 +13,19 @@ const OverdueOrdersTable: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
+  const debouncedCurrentPage = useDebounce(
+    currentPage,
+    currentPage !== 1 ? 1500 : 0,
+  );
 
   useEffect(() => {
     const getOrders = async () => {
       try {
+        if (Number.isNaN(debouncedCurrentPage)) {
+          return;
+        }
         setLoading(true);
-        const data = await getOverdueOrders('desc', 5, 0);
+        const data = await getOverdueOrders(order, 5, debouncedCurrentPage - 1);
         setOrders(data?.orders ?? []);
         setTotalPages(data?.pagesTotalNum ?? 1);
         setLoading(false);
@@ -27,47 +34,29 @@ const OverdueOrdersTable: React.FC = () => {
       }
     };
     getOrders();
-  }, []);
+  }, [debouncedCurrentPage, order]);
 
-  const handleFetchOrders = async (pageNumber: number) => {
-    try {
-      setLoading(true);
-      const orderData = await getOverdueOrders(order, 5, pageNumber - 1);
-      setOrders(orderData?.orders ?? []);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const debouncedFetchOrders = useCallback(debounce(handleFetchOrders, 300), [
-    order,
-  ]);
-
-  const handlePageChange = (pageNumber: number) => {
+  const handlePageChange = async (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    debouncedFetchOrders(pageNumber);
+    if (Number.isNaN(pageNumber)) {
+      return;
+    }
+    setLoading(true);
   };
 
   const handlePageSort = async () => {
     try {
       setCurrentPage(1);
       setLoading(true);
-      let orderData;
       if (order === 'desc') {
         setOrder('asc');
-        orderData = await getOverdueOrders('asc', 5, 0);
       } else {
         setOrder('desc');
-        orderData = await getOverdueOrders('desc', 5, 0);
       }
-      setOrders(orderData?.orders ?? []);
-      setLoading(false);
     } catch (err) {
       console.log(err);
     }
   };
-
   return (
     <div
       style={{
@@ -296,7 +285,7 @@ const OverdueOrdersTable: React.FC = () => {
             }}
             style={{ width: '50px', display: 'inline-block' }}
           />{' '}
-          &nbsp;of {totalPages}
+          &nbsp;{totalPages}
         </div>
         <span
           className="material-symbols-outlined"
@@ -332,5 +321,4 @@ const OverdueOrdersTable: React.FC = () => {
     </div>
   );
 };
-
 export default OverdueOrdersTable;
