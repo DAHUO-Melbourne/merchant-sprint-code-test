@@ -11,7 +11,7 @@ const TTL_IN_SECONDS = 3600;
 
 type OrderType = 'asc' | 'desc';
 
-interface CombinedOrder {
+export interface CombinedOrder {
   orderId: string;
   orderValue: string;
   items: string;
@@ -81,7 +81,7 @@ const readCSV = (filePath: string): Promise<Store[]> =>
     }
   });
 
-const combineOrdersAndStores = (orders: Order[], stores: Store[]): CombinedOrder[] => {
+export const combineOrdersAndStores = (orders: Order[], stores: Store[]): CombinedOrder[] => {
   const combinedOrders: CombinedOrder[] = [];
 
   orders.forEach((order) => {
