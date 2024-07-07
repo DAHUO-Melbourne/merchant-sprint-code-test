@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Pagination, FormControl } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import getOverdueOrders from '../apis/getOverdueOrders';
 import { Order, OrderType } from '../apis/getOverdueOrders';
 import ReactCountryFlag from 'react-country-flag';
@@ -156,32 +156,42 @@ const OverdueOrdersTable: React.FC = () => {
         )}
         {loading && <TableLoading columns={7} lines={5} />}
       </Table>
-      <Pagination
+      <div
         style={{
           display: 'flex',
           justifyContent: 'center',
-          marginTop: '20px',
+          margin: '20px 20px 20px auto',
           listStyle: 'none',
           alignItems: 'center',
         }}
       >
-        <Pagination.Item
+        <span
+          className="material-symbols-outlined"
           onClick={() => handlePageChange(1)}
-          disabled={currentPage === 1}
+          style={{
+            cursor: 'pointer',
+          }}
         >
-          <span className="material-symbols-outlined">
-            keyboard_double_arrow_left
-          </span>
-        </Pagination.Item>
-        <Pagination.Item
+          keyboard_double_arrow_left
+        </span>
+        <span
+          className="material-symbols-outlined"
           onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
+          style={{
+            cursor: 'pointer',
+          }}
         >
-          <span className="material-symbols-outlined">chevron_left</span>
-        </Pagination.Item>
-        <Pagination.Item>
-          Page{' '}
-          <FormControl
+          chevron_left
+        </span>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          Page&nbsp;
+          <input
             type="number"
             value={currentPage}
             onChange={(e) => {
@@ -189,23 +199,27 @@ const OverdueOrdersTable: React.FC = () => {
             }}
             style={{ width: '50px', display: 'inline-block' }}
           />{' '}
-          of {totalPages}
-        </Pagination.Item>
-        <Pagination.Item
+          &nbsp;of {totalPages}
+        </div>
+        <span
+          className="material-symbols-outlined"
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          style={{
+            cursor: 'pointer',
+          }}
         >
-          <span className="material-symbols-outlined">chevron_right</span>
-        </Pagination.Item>
-        <Pagination.Item
+          chevron_right
+        </span>
+        <span
+          className="material-symbols-outlined"
           onClick={() => handlePageChange(totalPages)}
-          disabled={currentPage === totalPages}
+          style={{
+            cursor: 'pointer',
+          }}
         >
-          <span className="material-symbols-outlined">
-            keyboard_double_arrow_right
-          </span>
-        </Pagination.Item>
-      </Pagination>
+          keyboard_double_arrow_right
+        </span>
+      </div>
     </div>
   );
 };
