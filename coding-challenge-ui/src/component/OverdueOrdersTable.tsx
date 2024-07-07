@@ -3,18 +3,24 @@ import { Table, Pagination, FormControl } from 'react-bootstrap';
 import getOverdueOrders from '../apis/getOverdueOrders';
 import { Order, OrderType } from '../apis/getOverdueOrders';
 import ReactCountryFlag from 'react-country-flag';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { TableLoading } from 'react-bootstrap-table-loading';
 
 const OverdueOrdersTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [order, setOrder] = useState<OrderType>('desc');
   const [orders, setOrders] = useState<Order[]>([]);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+
   useEffect(() => {
     const getOrders = async () => {
       try {
+        setLoading(true);
         const data = await getOverdueOrders('desc', 5, 0);
         setOrders(data?.orders ?? []);
         setTotalPages(data?.pagesTotalNum ?? 1);
+        setLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -25,8 +31,10 @@ const OverdueOrdersTable: React.FC = () => {
   const handlePageChange = async (pageNumber: number) => {
     try {
       setCurrentPage(pageNumber);
+      setLoading(true);
       const orderData = await getOverdueOrders(order, 5, pageNumber - 1);
       setOrders(orderData?.orders ?? []);
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -35,6 +43,7 @@ const OverdueOrdersTable: React.FC = () => {
   const handlePageSort = async () => {
     try {
       setCurrentPage(1);
+      setLoading(true);
       let orderData;
       if (order === 'desc') {
         setOrder('asc');
@@ -44,6 +53,7 @@ const OverdueOrdersTable: React.FC = () => {
         orderData = await getOverdueOrders('desc', 5, 0);
       }
       setOrders(orderData?.orders ?? []);
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -117,31 +127,34 @@ const OverdueOrdersTable: React.FC = () => {
             </th>
           </tr>
         </thead>
-        <tbody>
-          {orders?.map((order) => (
-            <tr key={order.orderId}>
-              <td style={{ textAlign: 'left' }}>
-                <ReactCountryFlag
-                  countryCode={order.storeCountry.substring(0, 2)}
-                />
-                &nbsp;{order.storeMarketplace}
-              </td>
-              <td style={{ textAlign: 'left' }}>{order.storeShopName}</td>
-              <td style={{ textAlign: 'left' }}>{order.orderId}</td>
-              <td style={{ textAlign: 'left' }}>{order.orderValue}</td>
-              <td style={{ textAlign: 'left' }}>{order.items}</td>
-              <td style={{ textAlign: 'left' }}>{order.destination}</td>
-              <td
-                style={{
-                  textAlign: 'left',
-                  color: order.daysOverdue > 20 ? 'red' : 'black',
-                }}
-              >
-                {order.daysOverdue}
-              </td>
-            </tr>
-          ))}
-        </tbody>
+        {!loading && (
+          <tbody>
+            {orders?.map((order) => (
+              <tr key={order.orderId}>
+                <td style={{ textAlign: 'left' }}>
+                  <ReactCountryFlag
+                    countryCode={order.storeCountry.substring(0, 2)}
+                  />
+                  &nbsp;{order.storeMarketplace}
+                </td>
+                <td style={{ textAlign: 'left' }}>{order.storeShopName}</td>
+                <td style={{ textAlign: 'left' }}>{order.orderId}</td>
+                <td style={{ textAlign: 'left' }}>{order.orderValue}</td>
+                <td style={{ textAlign: 'left' }}>{order.items}</td>
+                <td style={{ textAlign: 'left' }}>{order.destination}</td>
+                <td
+                  style={{
+                    textAlign: 'left',
+                    color: order.daysOverdue > 20 ? 'red' : 'black',
+                  }}
+                >
+                  {order.daysOverdue}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        )}
+        {loading && <TableLoading columns={7} lines={5} />}
       </Table>
       <Pagination
         style={{
