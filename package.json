@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "This coding challenge is designed to assess how you approach and solve a problem that is very similar to the day to day way of working at MerchantSpring. It is based off a real requirement to give you a sense of what the work is like, however it is not real work for our product. It shouldn't take more than a few hours, there are no hidden tricks, please approch this problem as you would if you were releasing it to production.",
   "main": "index.js",
+  "author": "robert dahuo",
   "private": true,
   "scripts": {
     "back:test": "cd packages/coding-challenge-api && npm run test",
@@ -13,7 +14,6 @@
     "dev": "npm-run-all --parallel back:dev front:dev"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "workspaces": [
     "packages/coding-challenge-api",
