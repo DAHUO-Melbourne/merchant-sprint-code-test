@@ -11,30 +11,42 @@ const OverdueOrdersTable: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   useEffect(() => {
     const getOrders = async () => {
-      const data = await getOverdueOrders('desc', 5, 0);
-      setOrders(data?.orders ?? []);
-      setTotalPages(data?.pagesTotalNum ?? 1);
+      try {
+        const data = await getOverdueOrders('desc', 5, 0);
+        setOrders(data?.orders ?? []);
+        setTotalPages(data?.pagesTotalNum ?? 1);
+      } catch (err) {
+        console.log(err);
+      }
     };
     getOrders();
   }, []);
 
   const handlePageChange = async (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-    const orderData = await getOverdueOrders(order, 5, pageNumber - 1);
-    setOrders(orderData?.orders ?? []);
+    try {
+      setCurrentPage(pageNumber);
+      const orderData = await getOverdueOrders(order, 5, pageNumber - 1);
+      setOrders(orderData?.orders ?? []);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handlePageSort = async () => {
-    setCurrentPage(1);
-    let orderData;
-    if (order === 'desc') {
-      setOrder('asc');
-      orderData = await getOverdueOrders('asc', 5, 0);
-    } else {
-      setOrder('desc');
-      orderData = await getOverdueOrders('desc', 5, 0);
+    try {
+      setCurrentPage(1);
+      let orderData;
+      if (order === 'desc') {
+        setOrder('asc');
+        orderData = await getOverdueOrders('asc', 5, 0);
+      } else {
+        setOrder('desc');
+        orderData = await getOverdueOrders('desc', 5, 0);
+      }
+      setOrders(orderData?.orders ?? []);
+    } catch (err) {
+      console.log(err);
     }
-    setOrders(orderData?.orders ?? []);
   };
 
   return (
