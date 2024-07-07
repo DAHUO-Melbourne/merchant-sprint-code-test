@@ -46,7 +46,6 @@ const OverdueOrdersTable: React.FC = () => {
 
   const handlePageSort = async () => {
     try {
-      setCurrentPage(1);
       setLoading(true);
       if (order === 'desc') {
         setOrder('asc');
