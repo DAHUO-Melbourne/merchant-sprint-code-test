@@ -63,52 +63,16 @@ const OverdueOrdersTable: React.FC = () => {
       <Table striped hover size="sm" className="table-content">
         <thead>
           <tr>
-            <th
-              className="table-header-cell"
-              style={{
-                width: '12%',
-              }}
-            >
+            <th className="table-header-cell small-column-width">
               MARKETPLACE
             </th>
-            <th
-              className="table-header-cell"
-              style={{
-                width: '15%',
-              }}
-            >
-              STORE
-            </th>
-            <th
-              className="table-header-cell"
-              style={{
-                width: '15%',
-              }}
-            >
-              ORDER ID
-            </th>
-            <th
-              className="table-header-cell"
-              style={{
-                width: '15%',
-              }}
-            >
+            <th className="table-header-cell medium-column-width">STORE</th>
+            <th className="table-header-cell medium-column-width">ORDER ID</th>
+            <th className="table-header-cell medium-column-width">
               ORDER VALUE
             </th>
-            <th
-              className="table-header-cell"
-              style={{
-                width: '10%',
-              }}
-            >
-              ITEMS
-            </th>
-            <th
-              className="table-header-cell"
-              style={{
-                width: '20%',
-              }}
-            >
+            <th className="table-header-cell small-column-width">ITEMS</th>
+            <th className="table-header-cell large-column-width">
               DESTINATION
             </th>
             <th
