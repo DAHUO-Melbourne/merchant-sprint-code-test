@@ -112,25 +112,11 @@ const OverdueOrdersTable: React.FC = () => {
               DESTINATION
             </th>
             <th
-              className="table-header-cell"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                cursor: 'pointer',
-              }}
+              className="table-header-cell clickable-head"
               onClick={() => handlePageSort()}
             >
-              <span
-                style={{
-                  display: 'block',
-                }}
-              >
-                DAYS OVERDUE
-              </span>
-              <span
-                className="material-symbols-outlined"
-                style={{ fontSize: '12px', display: 'block' }}
-              >
+              <span>DAYS OVERDUE</span>
+              <span className="material-symbols-outlined swap-icon ">
                 swap_vert
               </span>
             </th>

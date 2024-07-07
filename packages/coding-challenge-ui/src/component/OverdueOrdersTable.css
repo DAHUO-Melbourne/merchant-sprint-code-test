@@ -56,3 +56,14 @@
   width: 50px; 
   display:inline-block;
 }
+
+.clickable-head {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.swap-icon {
+  font-size: 12px;
+  display: block;
+}
