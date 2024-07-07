@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Table } from 'react-bootstrap';
 import getOverdueOrders from '../apis/getOverdueOrders';
 import { Order, OrderType } from '../apis/getOverdueOrders';
 import ReactCountryFlag from 'react-country-flag';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { TableLoading } from 'react-bootstrap-table-loading';
+import debounce from 'lodash/debounce';
 
 const OverdueOrdersTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -28,9 +29,8 @@ const OverdueOrdersTable: React.FC = () => {
     getOrders();
   }, []);
 
-  const handlePageChange = async (pageNumber: number) => {
+  const handleFetchOrders = async (pageNumber: number) => {
     try {
-      setCurrentPage(pageNumber);
       setLoading(true);
       const orderData = await getOverdueOrders(order, 5, pageNumber - 1);
       setOrders(orderData?.orders ?? []);
@@ -38,6 +38,15 @@ const OverdueOrdersTable: React.FC = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const debouncedFetchOrders = useCallback(debounce(handleFetchOrders, 300), [
+    order,
+  ]);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    debouncedFetchOrders(pageNumber);
   };
 
   const handlePageSort = async () => {
@@ -287,7 +296,7 @@ const OverdueOrdersTable: React.FC = () => {
             }}
             style={{ width: '50px', display: 'inline-block' }}
           />{' '}
-          &nbsp;{totalPages}
+          &nbsp;of {totalPages}
         </div>
         <span
           className="material-symbols-outlined"
