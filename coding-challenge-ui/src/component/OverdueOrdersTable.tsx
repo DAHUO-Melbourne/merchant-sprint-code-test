@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Pagination, FormControl } from 'react-bootstrap';
 import getOverdueOrders from '../apis/getOverdueOrders';
 import { Order, OrderType } from '../apis/getOverdueOrders';
+import ReactCountryFlag from 'react-country-flag';
 
 const OverdueOrdersTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -72,7 +73,7 @@ const OverdueOrdersTable: React.FC = () => {
       >
         <thead style={{ backgroundColor: '#E5E7E9' }}>
           <tr>
-            <th style={{ textAlign: 'left', width: '15%', fontSize: '12px' }}>
+            <th style={{ textAlign: 'left', width: '12%', fontSize: '12px' }}>
               MARKETPLACE
             </th>
             <th style={{ textAlign: 'left', width: '15%', fontSize: '12px' }}>
@@ -93,11 +94,9 @@ const OverdueOrdersTable: React.FC = () => {
             <th
               style={{
                 textAlign: 'left',
-                width: '10%',
+                width: '13%',
                 cursor: 'pointer',
                 fontSize: '12px',
-                display: 'flex',
-                alignItems: 'center',
               }}
               onClick={() => handlePageSort()}
             >
@@ -109,7 +108,12 @@ const OverdueOrdersTable: React.FC = () => {
         <tbody>
           {orders?.map((order) => (
             <tr key={order.orderId}>
-              <td style={{ textAlign: 'left' }}>{order.storeMarketplace}</td>
+              <td style={{ textAlign: 'left' }}>
+                <ReactCountryFlag
+                  countryCode={order.storeCountry.substring(0, 2)}
+                />
+                &nbsp;{order.storeMarketplace}
+              </td>
               <td style={{ textAlign: 'left' }}>{order.storeShopName}</td>
               <td style={{ textAlign: 'left' }}>{order.orderId}</td>
               <td style={{ textAlign: 'left' }}>{order.orderValue}</td>
