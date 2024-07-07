@@ -1,12 +1,58 @@
 .table-container {
+  margin-top: 40px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 50px;
-  max-height: 100vh;
+  background-color: #ffffff;
+  border-radius: 10px;
+  width: 90%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 40px auto
 }
 
-.MuiPaper-root {
+.table-title {
+  font-weight: bold;
   width: 100%;
-  max-width: 1000px;
+  text-align: left;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.table-content {
+  width: 100%;
+  margin: auto;
+  background-color: #ffffff;
+}
+
+.table-header-cell {
+  text-align: left;
+  font-size: 12px;
+  background-color: #E5E7E9 !important;
+  color: #808080 !important;
+  padding: 10px;
+}
+
+.text-leftAlign {
+  text-align: 'left' 
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px 20px 20px auto;
+  list-style: none;
+  align-items: center;
+}
+
+.pagination-input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-inputbox {
+  width: 50px; 
+  display:inline-block;
 }

@@ -6,6 +6,7 @@ import ReactCountryFlag from 'react-country-flag';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { TableLoading } from 'react-bootstrap-table-loading';
 import useDebounce from '../hooks/useDebounce';
+import './OverdueOrdersTable.css';
 
 const OverdueOrdersTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -57,130 +58,71 @@ const OverdueOrdersTable: React.FC = () => {
     }
   };
   return (
-    <div
-      style={{
-        marginTop: '40px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#ffffff',
-        borderRadius: '10px',
-        width: '90%',
-        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-        margin: '40px auto',
-      }}
-    >
-      <div
-        style={{
-          fontWeight: 'bold',
-          width: '100%',
-          textAlign: 'left',
-          backgroundColor: '#ffffff',
-          padding: '10px',
-          borderRadius: '5px',
-        }}
-      >
-        Overdue Orders
-      </div>
-      <Table
-        striped
-        hover
-        size="sm"
-        style={{ width: '100%', margin: 'auto', backgroundColor: '#ffffff' }}
-      >
+    <div className="table-container">
+      <div className="table-title">Overdue Orders</div>
+      <Table striped hover size="sm" className="table-content">
         <thead>
           <tr>
             <th
+              className="table-header-cell"
               style={{
-                textAlign: 'left',
                 width: '12%',
-                fontSize: '12px',
-                backgroundColor: '#E5E7E9',
-                color: '#808080',
-                padding: '10px',
               }}
             >
               MARKETPLACE
             </th>
             <th
+              className="table-header-cell"
               style={{
-                textAlign: 'left',
                 width: '15%',
-                backgroundColor: '#E5E7E9',
-                fontSize: '12px',
-                color: '#808080',
-                padding: '10px',
               }}
             >
               STORE
             </th>
             <th
+              className="table-header-cell"
               style={{
-                textAlign: 'left',
                 width: '15%',
-                backgroundColor: '#E5E7E9',
-                fontSize: '12px',
-                color: '#808080',
-                padding: '10px',
               }}
             >
               ORDER ID
             </th>
             <th
+              className="table-header-cell"
               style={{
-                textAlign: 'left',
                 width: '15%',
-                backgroundColor: '#E5E7E9',
-                fontSize: '12px',
-                color: '#808080',
-                padding: '10px',
               }}
             >
               ORDER VALUE
             </th>
             <th
+              className="table-header-cell"
               style={{
-                textAlign: 'left',
                 width: '10%',
-                fontSize: '12px',
-                backgroundColor: '#E5E7E9',
-                color: '#808080',
-                padding: '10px',
               }}
             >
               ITEMS
             </th>
             <th
+              className="table-header-cell"
               style={{
-                textAlign: 'left',
                 width: '20%',
-                fontSize: '12px',
-                backgroundColor: '#E5E7E9',
-                color: '#808080',
-                padding: '10px',
               }}
             >
               DESTINATION
             </th>
             <th
+              className="table-header-cell"
               style={{
-                textAlign: 'left',
-                cursor: 'pointer',
-                fontSize: '12px',
-                backgroundColor: '#E5E7E9',
                 display: 'flex',
-                color: '#808080',
                 alignItems: 'center',
-                padding: '10px',
+                cursor: 'pointer',
               }}
               onClick={() => handlePageSort()}
             >
               <span
                 style={{
-                  fontSize: '12px',
                   display: 'block',
-                  color: '#808080',
                 }}
               >
                 DAYS OVERDUE
@@ -198,20 +140,20 @@ const OverdueOrdersTable: React.FC = () => {
           <tbody>
             {orders?.map((order) => (
               <tr key={order.orderId}>
-                <td style={{ textAlign: 'left' }}>
+                <td className="text-leftAlign">
                   <ReactCountryFlag
                     countryCode={order.storeCountry.substring(0, 2)}
                   />
                   &nbsp;{order.storeMarketplace}
                 </td>
-                <td style={{ textAlign: 'left' }}>{order.storeShopName}</td>
-                <td style={{ textAlign: 'left' }}>{order.orderId}</td>
-                <td style={{ textAlign: 'left' }}>{order.orderValue}</td>
-                <td style={{ textAlign: 'left' }}>{order.items}</td>
-                <td style={{ textAlign: 'left' }}>{order.destination}</td>
+                <td className="text-leftAlign">{order.storeShopName}</td>
+                <td className="text-leftAlign">{order.orderId}</td>
+                <td className="text-leftAlign">{order.orderValue}</td>
+                <td className="text-leftAlign">{order.items}</td>
+                <td className="text-leftAlign">{order.destination}</td>
                 <td
+                  className="text-leftAlign"
                   style={{
-                    textAlign: 'left',
                     color: order.daysOverdue > 20 ? 'red' : 'black',
                   }}
                 >
@@ -223,15 +165,7 @@ const OverdueOrdersTable: React.FC = () => {
         )}
         {loading && <TableLoading columns={7} lines={5} />}
       </Table>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          margin: '20px 20px 20px auto',
-          listStyle: 'none',
-          alignItems: 'center',
-        }}
-      >
+      <div className="pagination-wrapper">
         <span
           className="material-symbols-outlined"
           onClick={() => {
@@ -262,16 +196,13 @@ const OverdueOrdersTable: React.FC = () => {
         >
           chevron_left
         </span>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <div className="pagination-input-wrapper">
           <span
             style={{
-              color: '#D3D3D3',
+              color:
+                currentPage !== 1 && currentPage !== totalPages
+                  ? '#000000'
+                  : '#D3D3D3',
             }}
           >
             Page&nbsp;
@@ -282,7 +213,7 @@ const OverdueOrdersTable: React.FC = () => {
             onChange={(e) => {
               handlePageChange(parseInt(e.target.value));
             }}
-            style={{ width: '50px', display: 'inline-block' }}
+            className="pagination-inputbox"
           />{' '}
           &nbsp;{totalPages}
         </div>
