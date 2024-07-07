@@ -72,14 +72,33 @@ const OverdueOrdersTable: React.FC = () => {
       >
         <thead style={{ backgroundColor: '#E5E7E9' }}>
           <tr>
-            <th style={{ textAlign: 'left', width: '15%' }}>MARKETPLACE</th>
-            <th style={{ textAlign: 'left', width: '15%' }}>STORE</th>
-            <th style={{ textAlign: 'left', width: '15%' }}>ORDER ID</th>
-            <th style={{ textAlign: 'left', width: '15%' }}>ORDER VALUE</th>
-            <th style={{ textAlign: 'left', width: '10%' }}>ITEMS</th>
-            <th style={{ textAlign: 'left', width: '20%' }}>DESTINATION</th>
+            <th style={{ textAlign: 'left', width: '15%', fontSize: '12px' }}>
+              MARKETPLACE
+            </th>
+            <th style={{ textAlign: 'left', width: '15%', fontSize: '12px' }}>
+              STORE
+            </th>
+            <th style={{ textAlign: 'left', width: '15%', fontSize: '12px' }}>
+              ORDER ID
+            </th>
+            <th style={{ textAlign: 'left', width: '15%', fontSize: '12px' }}>
+              ORDER VALUE
+            </th>
+            <th style={{ textAlign: 'left', width: '10%', fontSize: '12px' }}>
+              ITEMS
+            </th>
+            <th style={{ textAlign: 'left', width: '20%', fontSize: '12px' }}>
+              DESTINATION
+            </th>
             <th
-              style={{ textAlign: 'left', width: '10%', cursor: 'pointer' }}
+              style={{
+                textAlign: 'left',
+                width: '10%',
+                cursor: 'pointer',
+                fontSize: '12px',
+                display: 'flex',
+                alignItems: 'center',
+              }}
               onClick={() => handlePageSort()}
             >
               <span className="material-symbols-outlined">swap_vert</span>DAYS
