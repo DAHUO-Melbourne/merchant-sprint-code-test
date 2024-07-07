@@ -238,7 +238,12 @@ const OverdueOrdersTable: React.FC = () => {
       >
         <span
           className="material-symbols-outlined"
-          onClick={() => handlePageChange(1)}
+          onClick={() => {
+            if (currentPage === 1) {
+              return;
+            }
+            handlePageChange(1);
+          }}
           style={{
             cursor: 'pointer',
           }}
@@ -247,7 +252,12 @@ const OverdueOrdersTable: React.FC = () => {
         </span>
         <span
           className="material-symbols-outlined"
-          onClick={() => handlePageChange(currentPage - 1)}
+          onClick={() => {
+            if (currentPage === 1) {
+              return;
+            }
+            handlePageChange(currentPage - 1);
+          }}
           style={{
             cursor: 'pointer',
           }}
@@ -274,7 +284,12 @@ const OverdueOrdersTable: React.FC = () => {
         </div>
         <span
           className="material-symbols-outlined"
-          onClick={() => handlePageChange(currentPage + 1)}
+          onClick={() => {
+            if (currentPage === totalPages) {
+              return;
+            }
+            handlePageChange(currentPage + 1);
+          }}
           style={{
             cursor: 'pointer',
           }}
@@ -283,7 +298,12 @@ const OverdueOrdersTable: React.FC = () => {
         </span>
         <span
           className="material-symbols-outlined"
-          onClick={() => handlePageChange(totalPages)}
+          onClick={() => {
+            if (currentPage === totalPages) {
+              return;
+            }
+            handlePageChange(totalPages);
+          }}
           style={{
             cursor: 'pointer',
           }}
