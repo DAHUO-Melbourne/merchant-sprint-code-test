@@ -1,4 +1,4 @@
-import { combineOrdersAndStores, CombinedOrder } from '../services/OrdersService';
+import { combineOrdersAndStores, CombinedOrder } from './OrdersService';
 import type { Order, Store } from '../models';
 
 describe('combineOrdersAndStores', () => {

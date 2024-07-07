@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import request from 'supertest';
 import express from 'express';
-import router from '../controllers/ordersController';
+import router from './ordersController';
 import getSortedOverdueOrders from '../services/OrdersService';
 
 jest.mock('../services/OrdersService');

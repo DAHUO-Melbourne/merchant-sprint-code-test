@@ -1,0 +1,23 @@
+{
+  "name": "coding-challenge",
+  "version": "1.0.0",
+  "description": "This coding challenge is designed to assess how you approach and solve a problem that is very similar to the day to day way of working at MerchantSpring. It is based off a real requirement to give you a sense of what the work is like, however it is not real work for our product. It shouldn't take more than a few hours, there are no hidden tricks, please approch this problem as you would if you were releasing it to production.",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "back:dev": "cd packages/coding-challenge-api && npm run dev",
+    "front:dev": "cd packages/coding-challenge-ui && npm run dev",
+    "dev": "npm-run-all --parallel back:dev front:dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "packages/coding-challenge-api",
+    "packages/coding-challenge-ui"
+  ],
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
