@@ -76,7 +76,6 @@ const OverdueOrdersTable: React.FC = () => {
     >
       <div
         style={{
-          marginBottom: '10px',
           fontWeight: 'bold',
           width: '100%',
           textAlign: 'left',
@@ -245,7 +244,8 @@ const OverdueOrdersTable: React.FC = () => {
             handlePageChange(1);
           }}
           style={{
-            cursor: 'pointer',
+            cursor: currentPage !== 1 ? 'pointer' : 'auto',
+            color: currentPage !== 1 ? '#000000' : '#D3D3D3',
           }}
         >
           keyboard_double_arrow_left
@@ -259,7 +259,8 @@ const OverdueOrdersTable: React.FC = () => {
             handlePageChange(currentPage - 1);
           }}
           style={{
-            cursor: 'pointer',
+            cursor: currentPage !== 1 ? 'pointer' : 'auto',
+            color: currentPage !== 1 ? '#000000' : '#D3D3D3',
           }}
         >
           chevron_left
@@ -271,7 +272,13 @@ const OverdueOrdersTable: React.FC = () => {
             justifyContent: 'center',
           }}
         >
-          Page&nbsp;
+          <span
+            style={{
+              color: '#D3D3D3',
+            }}
+          >
+            Page&nbsp;
+          </span>
           <input
             type="number"
             value={currentPage}
@@ -280,7 +287,7 @@ const OverdueOrdersTable: React.FC = () => {
             }}
             style={{ width: '50px', display: 'inline-block' }}
           />{' '}
-          &nbsp;of {totalPages}
+          &nbsp;{totalPages}
         </div>
         <span
           className="material-symbols-outlined"
@@ -291,7 +298,8 @@ const OverdueOrdersTable: React.FC = () => {
             handlePageChange(currentPage + 1);
           }}
           style={{
-            cursor: 'pointer',
+            cursor: currentPage !== totalPages ? 'pointer' : 'auto',
+            color: currentPage !== totalPages ? '#000000' : '#D3D3D3',
           }}
         >
           chevron_right
@@ -305,7 +313,8 @@ const OverdueOrdersTable: React.FC = () => {
             handlePageChange(totalPages);
           }}
           style={{
-            cursor: 'pointer',
+            cursor: currentPage !== totalPages ? 'pointer' : 'auto',
+            color: currentPage !== totalPages ? '#000000' : '#D3D3D3',
           }}
         >
           keyboard_double_arrow_right
