@@ -93,37 +93,108 @@ const OverdueOrdersTable: React.FC = () => {
         size="sm"
         style={{ width: '100%', margin: 'auto', backgroundColor: '#ffffff' }}
       >
-        <thead style={{ backgroundColor: '#E5E7E9' }}>
+        <thead>
           <tr>
-            <th style={{ textAlign: 'left', width: '12%', fontSize: '12px' }}>
+            <th
+              style={{
+                textAlign: 'left',
+                width: '12%',
+                fontSize: '12px',
+                backgroundColor: '#E5E7E9',
+                color: '#808080',
+                padding: '10px',
+              }}
+            >
               MARKETPLACE
             </th>
-            <th style={{ textAlign: 'left', width: '15%', fontSize: '12px' }}>
+            <th
+              style={{
+                textAlign: 'left',
+                width: '15%',
+                backgroundColor: '#E5E7E9',
+                fontSize: '12px',
+                color: '#808080',
+                padding: '10px',
+              }}
+            >
               STORE
             </th>
-            <th style={{ textAlign: 'left', width: '15%', fontSize: '12px' }}>
+            <th
+              style={{
+                textAlign: 'left',
+                width: '15%',
+                backgroundColor: '#E5E7E9',
+                fontSize: '12px',
+                color: '#808080',
+                padding: '10px',
+              }}
+            >
               ORDER ID
             </th>
-            <th style={{ textAlign: 'left', width: '15%', fontSize: '12px' }}>
+            <th
+              style={{
+                textAlign: 'left',
+                width: '15%',
+                backgroundColor: '#E5E7E9',
+                fontSize: '12px',
+                color: '#808080',
+                padding: '10px',
+              }}
+            >
               ORDER VALUE
             </th>
-            <th style={{ textAlign: 'left', width: '10%', fontSize: '12px' }}>
+            <th
+              style={{
+                textAlign: 'left',
+                width: '10%',
+                fontSize: '12px',
+                backgroundColor: '#E5E7E9',
+                color: '#808080',
+                padding: '10px',
+              }}
+            >
               ITEMS
             </th>
-            <th style={{ textAlign: 'left', width: '20%', fontSize: '12px' }}>
+            <th
+              style={{
+                textAlign: 'left',
+                width: '20%',
+                fontSize: '12px',
+                backgroundColor: '#E5E7E9',
+                color: '#808080',
+                padding: '10px',
+              }}
+            >
               DESTINATION
             </th>
             <th
               style={{
                 textAlign: 'left',
-                width: '13%',
                 cursor: 'pointer',
                 fontSize: '12px',
+                backgroundColor: '#E5E7E9',
+                display: 'flex',
+                color: '#808080',
+                alignItems: 'center',
+                padding: '10px',
               }}
               onClick={() => handlePageSort()}
             >
-              <span className="material-symbols-outlined">swap_vert</span>DAYS
-              OVERDUE
+              <span
+                style={{
+                  fontSize: '12px',
+                  display: 'block',
+                  color: '#808080',
+                }}
+              >
+                DAYS OVERDUE
+              </span>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: '12px', display: 'block' }}
+              >
+                swap_vert
+              </span>
             </th>
           </tr>
         </thead>
