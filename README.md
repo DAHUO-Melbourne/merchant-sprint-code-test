@@ -16,6 +16,7 @@
 
 ## what's next?
 there is a performance issue, but I don't have enough time to finish it, if I get time, I will do the following:
-1. use docker to start a mysql server
+1. use docker to start a mysql/PostgreSQL server
 1. create order table 
 1. use mysqlimport tool to import the csv into the orders table and then query the data from a proper database
+1. add an index to the frequently queried column to increase the query speed
